@@ -3,11 +3,11 @@
 <head>
     <title>User Permissions</title>
         <meta name="Name" content="User Permissions" />
-        <meta name="Version" content="1.1" />
+        <meta name="Version" content="1.3" />
         <meta name="Vendor" content="Rally Software" />
         <meta name="Author" content="Joel Krooswyk, Colin OBrien" />
 
-    <script type="text/javascript" src="https://demo02.rallydev.com/apps/2.0p5/sdk-debug.js"></script>
+    <script type="text/javascript" src="/apps/2.0p5/sdk-debug.js"></script>
 
     <script type="text/javascript">
     
@@ -27,6 +27,7 @@
                     Ext.create('Rally.data.WsapiDataStore', {
                         model: 'User',
                         autoLoad: true,
+                        limit:"Infinity",
                         fetch: ['DisplayName', 'FirstName', 'LastName', 'Name', 'UserPermissions', 'Project'],
                         filters: [
                             {
@@ -70,9 +71,13 @@
                         LastName = record.get('LastName');
                         var PermissionsArray = "";
                         var SubAdmin = record.get('SubscriptionAdmin');
+                        PermissionsArrayLength = record.get('UserPermissions');
+                        AllPermissions = PermissionsArrayLength.length;
                         
+                        
+                        if (AllPermissions != 0) {
                         if (SubAdmin == false) {
-                        
+                            
                             i = 0;
                             Ext.Array.each(record.get('UserPermissions'), function(permission, index) {
 
@@ -99,9 +104,9 @@
 
                             });
 
-                            if (PermissionsArray == "") {
-                                PermissionsArray = "Workspace Admin";
-                            }
+                            if (PermissionsArray != "") {
+                                //PermissionsArray = "Workspace Admin";
+                            
 
                             records.push({
                                     Permissions: PermissionsArray,
@@ -109,6 +114,8 @@
                                     FirstName: FirstName,
                                     LastName: LastName
                             });
+                            }
+                        }
                         }
                     });
             
